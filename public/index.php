@@ -35,7 +35,6 @@
             <article>
                 <h2><?= $d["nom"] ?></h2>
                 <p><?= $d["message"] ?></p>
-                <button>supprimer</button>
             </article>
         <?php endforeach; ?>
     <?php endif; ?>

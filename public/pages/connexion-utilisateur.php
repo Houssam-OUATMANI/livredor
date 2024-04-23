@@ -1,6 +1,11 @@
 <?php
 require "../../partials/header.php";
 
+// *** Middleware Authentifaction
+if(isset($_SESSION["is_connected"]) && $_SESSION["is_connected" ] === true) {
+    header("Location:/");
+}
+
 if(!empty($_POST)) {
     $password = parse_ini_file("../../.env")["PASSWORD"];
     $pdo = new PDO("mysql:host=localhost;dbname=livredor", "root", $password);
@@ -11,25 +16,26 @@ if(!empty($_POST)) {
     $password = $_POST['password'];
 
     // Logique
-   $stmt =  $pdo->prepare("SELECT * FROM admins WHERE email = ?");
+   $stmt =  $pdo->prepare("SELECT * FROM users WHERE email = ?");
    $stmt->execute([$email]);
-   $admin = $stmt->fetch();
+   $user = $stmt->fetch();
 
    // verifier si l'email existe
-   if(!$admin) {
+   if(!$user) {
     $_SESSION["error"] = "Auccun compte associe a cet email";
-    header("Location: /pages/connexion.php");
+    header("Location: /pages/connexion-utilisateur.php");
     return;
    }
    // verifier le mot de passe
-   if($password !== $admin["password"]) {
+
+   if(!password_verify($password, $user['password'])) {
     $_SESSION["error"] = "Mot de passe invalide";
-    header("Location: /pages/connexion.php");
+    header("Location: /pages/connexion-utilisateur.php");
     return;
    }
    
    // Tout est bon;
-   $_SESSION["admin"] = $admin;
+   $_SESSION["user"] = $user;
    $_SESSION["success"] = "Vous etes connecté";
    $_SESSION["is_connected"] = true;
    header("Location: /");
@@ -44,7 +50,11 @@ if(!empty($_POST)) {
         <div style="background-color: tomato; padding : 2rem 1rem;"> <?= $_SESSION["error"] ?> </div>
     <?php endif; ?>
 
-    <h1>Connexion administrateur</h1>
+    <?php if(isset($_SESSION["success"])) :?>
+        <div style="background-color: chartreuse; padding : 2rem 1rem;"> <?= $_SESSION["success"] ?> </div>
+    <?php endif; ?>
+
+    <h1>Connexion utilisateur</h1>
 
     <form action="" method="post">
 

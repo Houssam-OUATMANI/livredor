@@ -1,4 +1,4 @@
 <?php
 session_start();
 session_destroy();
-header("Location: /pages/connexion.php");
+header("Location: /pages/connexion-utilisateur.php");
