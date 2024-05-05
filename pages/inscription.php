@@ -1,5 +1,5 @@
 <?php
-require "../../partials/header.php";
+require "../partials/header.php";
 
 // *** Middleware Authentifaction
 if(isset($_SESSION["is_connected"]) && $_SESSION["is_connected" ] === true) {
@@ -7,7 +7,7 @@ if(isset($_SESSION["is_connected"]) && $_SESSION["is_connected" ] === true) {
 }
 
 if(!empty($_POST)) {
-    $password = parse_ini_file("../../.env")["PASSWORD"];
+    $password = parse_ini_file("../.env")["PASSWORD"];
     $pdo = new PDO("mysql:host=localhost;dbname=livredor", "root", $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
@@ -57,5 +57,5 @@ if(!empty($_POST)) {
 
 <?php
 unset($_SESSION["error"]);
-require "../../partials/footer.php";
+require "../partials/footer.php";
 ?>

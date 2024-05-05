@@ -1,5 +1,5 @@
 <?php
-require "../../partials/header.php";
+require "../partials/header.php";
 
 // *** Middleware Authentifaction
 if(isset($_SESSION["is_connected"]) && $_SESSION["is_connected" ] === true) {
@@ -7,7 +7,7 @@ if(isset($_SESSION["is_connected"]) && $_SESSION["is_connected" ] === true) {
 }
 
 if(!empty($_POST)) {
-    $password = parse_ini_file("../../.env")["PASSWORD"];
+    $password = parse_ini_file("../.env")["PASSWORD"];
     $pdo = new PDO("mysql:host=localhost;dbname=livredor", "root", $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
@@ -16,26 +16,25 @@ if(!empty($_POST)) {
     $password = $_POST['password'];
 
     // Logique
-   $stmt =  $pdo->prepare("SELECT * FROM users WHERE email = ?");
+   $stmt =  $pdo->prepare("SELECT * FROM admins WHERE email = ?");
    $stmt->execute([$email]);
-   $user = $stmt->fetch();
+   $admin = $stmt->fetch();
 
    // verifier si l'email existe
-   if(!$user) {
+   if(!$admin) {
     $_SESSION["error"] = "Auccun compte associe a cet email";
-    header("Location: /pages/connexion-utilisateur.php");
+    header("Location: /pages/connexion-admin.php");
     return;
    }
    // verifier le mot de passe
-
-   if(!password_verify($password, $user['password'])) {
+   if($password !== $admin["password"]) {
     $_SESSION["error"] = "Mot de passe invalide";
-    header("Location: /pages/connexion-utilisateur.php");
+    header("Location: /pages/connexion-admin.php");
     return;
    }
    
    // Tout est bon;
-   $_SESSION["user"] = $user;
+   $_SESSION["admin"] = $admin;
    $_SESSION["success"] = "Vous etes connecté";
    $_SESSION["is_connected"] = true;
    header("Location: /");
@@ -54,7 +53,7 @@ if(!empty($_POST)) {
         <div style="background-color: chartreuse; padding : 2rem 1rem;"> <?= $_SESSION["success"] ?> </div>
     <?php endif; ?>
 
-    <h1>Connexion utilisateur</h1>
+    <h1>Connexion administrateur</h1>
 
     <form action="" method="post">
 
@@ -67,5 +66,5 @@ if(!empty($_POST)) {
 
 <?php
 unset($_SESSION["error"]);
-require "../../partials/footer.php";
+require "../partials/footer.php";
 ?>

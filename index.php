@@ -1,6 +1,6 @@
 <?php
-    require "../partials/header.php";
-    $password = parse_ini_file("../.env")["PASSWORD"];
+    require "partials/header.php";
+    $password = parse_ini_file(".env")["PASSWORD"];
     $pdo = new PDO("mysql:host=localhost;dbname=livredor", "root", $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
@@ -14,7 +14,7 @@
     }
    $stmt = $pdo->query("SELECT * FROM temoignages ORDER BY id DESC");
    $data = $stmt->fetchAll();
-
+    
 
 ?>
 
@@ -46,6 +46,6 @@
 
 <?php
     unset($_SESSION["success"]);
-    require "../partials/footer.php"
+require "partials/footer.php"
 ?>
 
